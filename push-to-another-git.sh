@@ -15,7 +15,7 @@ apk add --no-cache git
 git config --global user.email "carles@pina.cat"
 git config --global user.name "$GITHUB_USERNAME"
 
-git clone "https://$API_TOKEN_GITHUB@github.com/$GITHUB_USERNAME/$GITHUB_REPO.git" "$CLONE_DIR"
+git clone "git@github.com/$GITHUB_USERNAME/$GITHUB_REPO.git" "$CLONE_DIR"
 
 ls -l
 

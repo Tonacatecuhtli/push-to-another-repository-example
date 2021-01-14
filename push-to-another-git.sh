@@ -3,37 +3,32 @@
 # Inspired from
 #https://github.com/johno/actions-push-subdirectories/blob/master/entrypoint.sh#L10
 
-FOLDER="$1"
-GITHUB_USERNAME="$2"
-GITHUB_REPO="$3"
-GITHUB_USEREMAIL="$4"
+SOURCE_FOLDER="$1"
+DESTINATION_FOLDER="$2"
+GITHUB_USERNAME="$3"
+GITHUB_REPO="$4"
+GITHUB_USER_EMAIL="$5"
 
 CLONE_DIR=output_clone
 
 apt-get update && apt-get install git
 apk add --no-cache git
 
-git config --global user.email "$GITHUB_USEREMAIL"
+git config --global user.email "$GITHUB_USER_EMAIL"
 git config --global user.name "$GITHUB_USERNAME"
 
-git clone "git@github.com/$GITHUB_USERNAME/$GITHUB_REPO.git" "$CLONE_DIR"
+echo "Clone $GITHUB_REPO"
+git clone "git@github.com:$GITHUB_USERNAME/$GITHUB_REPO.git" "$CLONE_DIR"
 
-ls -l
+echo "Delete old files to handle deletions"
+rm -rf "${CLONE_DIR:?}/$DESTINATION_FOLDER/*"
 
-cd "$CLONE_DIR"
-# find needs to be in the git repository directory
-find . | grep -v ".git" | grep -v "^\.*$" | xargs rm -rf # delete all files (to handle deletions)
+echo "Copy new files"
+cp -r "$SOURCE_FOLDER"/* "$CLONE_DIR"/"$DESTINATION_FOLDER"/
 
-cp -r "../$FOLDER"/* .
-
-echo "After cd $CLONE_DIR"
-
-ls -la
-
+cd $CLONE_DIR
 git add .
 git commit --message "Update from $GITHUB_REPOSITORY"
 git push origin master
 
-cd ..
 echo "Done!"
-

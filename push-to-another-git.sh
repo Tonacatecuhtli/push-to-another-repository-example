@@ -6,13 +6,14 @@
 FOLDER="$1"
 GITHUB_USERNAME="$2"
 GITHUB_REPO="$3"
+GITHUB_USEREMAIL="$4"
 
 CLONE_DIR=output_clone
 
 apt-get update && apt-get install git
 apk add --no-cache git
 
-git config --global user.email "carles@pina.cat"
+git config --global user.email "$GITHUB_USEREMAIL"
 git config --global user.name "$GITHUB_USERNAME"
 
 git clone "git@github.com/$GITHUB_USERNAME/$GITHUB_REPO.git" "$CLONE_DIR"
